@@ -23,9 +23,11 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install Dependencies
       run: |
+        cd RUMEN
         python -m pip install --upgrade pip
         pip install pipenv
         pipenv install --dev
     - name: Run Tests
       run: |
+        cd RUMEN
         python manage.py test
