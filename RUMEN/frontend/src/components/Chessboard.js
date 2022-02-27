@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {useEffect, useState} from "react";
 
 const board = [
     ['bR', 'bN', 'bB', 'bQ', 'bK', 'bB', 'bN', 'bR'],
@@ -14,26 +14,25 @@ const board = [
 let flag = true;
 let piece = '';
 
-class Chessboard extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            jsxBoard: [
-                [null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null],
-            ],
-            msg: '',
-        };
-    }
+
+function Chessboard() {
 
 
-    redirect = (y, x) => () => {
+    const [jsxBoard, setJSXBoard] = useState(
+        [
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+        ]
+    );
+
+
+    const redirect = (y, x) => {
         if (flag) {
             if (board[y][x] != null) {
                 piece = board[y][x];
@@ -45,15 +44,20 @@ class Chessboard extends Component {
             flag = true;
         }
 
+        // let newArray = [];
+        //
+        // for (let i = 0; i < board.length; i++)
+        //     newArray[i] = board[i].slice();
+
+        setJSXBoard(board);
+    }
+
+    const renderPieces = () => {
         let newArray = [];
 
         for (let i = 0; i < board.length; i++)
             newArray[i] = board[i].slice();
 
-        this.setState({jsxBoard: newArray});
-    }
-
-    renderPieces() {
         for (let y = 0; y < 8; ++y) {
             for (let x = 0; x < 8; ++x) {
                 let color = 'black';
@@ -61,29 +65,31 @@ class Chessboard extends Component {
                     color = 'white'
                 }
                 if (board[y][x] != null) {
-                    this.state.jsxBoard[y][x] = (
-                        <div onClick={this.redirect(y, x)} id={y + '' + x} className={color + ' tile'}>
+                    newArray[y][x] = (
+                        <div onClick={() => redirect(y, x)} id={y + '' + x} className={color + ' tile'}>
                             <img src={'../../static/images/chessPieces/' + board[y][x] + '.svg'}
                                  alt='chess piece'/>
                         </div>
                     );
                 } else {
-                    this.state.jsxBoard[y][x] =
-                        <div onClick={this.redirect(y, x)} id={y + '' + x} className={color + ' tile'}/>
+                    newArray[y][x] =
+                        <div onClick={() => redirect(y, x)} id={y + '' + x} className={color + ' tile'}/>
                 }
             }
         }
+        setJSXBoard(newArray);
     }
 
-    render() {
-        this.renderPieces()
-        console.log(this.state.jsxBoard);
-        return (
-            <div id='chessboard'>
-                {this.state.jsxBoard}
-            </div>
-        );
-    }
+    useEffect(() => {
+            renderPieces();
+        }
+    );
+
+    return (
+        <div id='chessboard'>
+            {jsxBoard}
+        </div>
+    );
 }
 
 export default Chessboard
