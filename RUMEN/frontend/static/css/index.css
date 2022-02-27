@@ -24,27 +24,56 @@ html, body {
 
 #chessboard {
     display: grid;
-    grid-template-columns: repeat(8, 100px);
-    grid-template-rows: repeat(8, 100px);
+    grid-template-columns: repeat(8, 80px);
+    grid-template-rows: repeat(8, 80px);
     place-self: center;
     outline: black solid 2px;
 }
 
-#chessboard .white {
-    display: grid;
-    background-color: #d9d9d9;
-    /*outline: black 2px solid;*/
-}
-
-#chessboard .black {
-    display: grid;
-    /*background-color: #64f;*/
-    background-color: #938d99;
-    /*outline: black 2px solid;*/
-}
+/*@media screen and (min-width: 800px) {*/
+/*    #chessboard {*/
+/*        display: grid;*/
+/*        grid-template-columns: repeat(8, 6rem);*/
+/*        grid-template-rows: repeat(8, 6rem);*/
+/*        place-self: center;*/
+/*        outline: black solid 2px;*/
+/*    }*/
+/*}*/
 
 #chessboard img {
     place-self: center;
-    width: 75px;
-    height: 75px;
+    width: 60px;
+    height: 60px;
 }
+
+/*@media screen and (min-width: 500px) {*/
+/*    #chessboard img {*/
+/*        place-self: center;*/
+/*        width: 45px;*/
+/*        height: 45px;*/
+/*    }*/
+/*}*/
+
+/*@media screen and (min-width: 800px) {*/
+/*    #chessboard img {*/
+/*        place-self: center;*/
+/*        width: 75px;*/
+/*        height: 75px;*/
+/*    }*/
+/*}*/
+
+#chessboard .white {
+    background-color: #d9d9d9;
+}
+
+#chessboard .black {
+
+    /*background-color: #64f;*/
+    background-color: grey;
+}
+
+.tile {
+    display: grid;
+    /*outline: black 2px solid;*/
+}
+
