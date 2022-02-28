@@ -12,7 +12,9 @@ const board = [
 ];
 
 let flag = true;
+let flagForMove = false;
 let piece = '';
+let blackORwhite = ''
 
 
 function Chessboard() {
@@ -33,6 +35,11 @@ function Chessboard() {
 
 
     const redirect = (y, x) => {
+        if (flagForMove) {
+            blackORwhite = 'black'
+        } else {
+            blackORwhite = 'white'
+        }
         if (flag) {
             if (board[y][x] != null) {
                 piece = board[y][x];
@@ -42,14 +49,21 @@ function Chessboard() {
         } else {
             board[y][x] = piece;
             flag = true;
+            flagForMove = !flagForMove
         }
 
-        // let newArray = [];
-        //
-        // for (let i = 0; i < board.length; i++)
-        //     newArray[i] = board[i].slice();
-
         setJSXBoard(board);
+        const sendPOST = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                personToMove: blackORwhite,
+                board: 'asd',
+            }),
+        };
+        fetch('/api/create', sendPOST)
+            .then((response) => response.json())
+            .then((data) => console.log(data))
     }
 
     const renderPieces = () => {

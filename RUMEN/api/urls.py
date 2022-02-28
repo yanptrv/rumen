@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import hello
+from .views import BoardView, CreateBoardView
 
 urlpatterns = [
-    path('hello', hello),
+    path('chessboard', BoardView.as_view()),
+    path('create', CreateBoardView.as_view()),
 ]
