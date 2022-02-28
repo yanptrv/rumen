@@ -91,7 +91,7 @@ function Chessboard() {
                             if (x !== oldX)
                                 return false;
                         }
-                        if (x === 0) {
+                        if (y === 0) {
                             piece = 'wQ';
                         }
 
@@ -124,7 +124,7 @@ function Chessboard() {
                                 return false;
                         }
 
-                        if (x === 7) {
+                        if (y === 7) {
                             piece = 'bQ';
                         }
 
@@ -188,11 +188,8 @@ function Chessboard() {
                     board[y][x] = split[y].charAt(z) + split[y].charAt(z + 1);
                     z += 2;
                 }
-
-
             }
         }
-        console.log(board);
     }
 
     // copying the array with chess pieces and turning them into div classes
@@ -225,16 +222,22 @@ function Chessboard() {
         setJSXBoard(newArray);
     }
 
+    const fetchBoard = async () => {
+        let response = await fetch('/api/chessboard');
+        return await response.json();
+    }
+
     // during each re-render/ jsx board change we call the conversion function
 
     useEffect(() => {
             if (!didLoad) {
-                fetch('/api/chessboard').then((response) => response.json()).then((data) => {
+                fetchBoard().then(data => {
                     FENtoBoard(data[0]['board']);
                     flagForMove = data[0]['personToMove'] === 'white';
                 })
                 didLoad = true;
             }
+            // console.log('asd')
             renderPieces();
         }
     );
