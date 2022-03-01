@@ -93,7 +93,7 @@ function Chessboard() {
                     }
                 }
             }
-            return false;
+            return false
         }
 
         if (piece.charAt(0) === blackOrWhite.charAt(0)) {
@@ -103,12 +103,12 @@ function Chessboard() {
                         return false;
                     }
                 }
-                if (travelThroughPiece()) {
-                            return false;
-                        }
 
                 switch (piece.charAt(1)) {
                     case 'P':
+                        if (travelThroughPiece()) {
+                            return false;
+                        }
                         if (oldY === 6) {
                             if (y !== 4 && y !== 5) {
                                 return false;
@@ -139,14 +139,13 @@ function Chessboard() {
                         return false;
                     }
                 }
-                if (travelThroughPiece()) {
-                            console.log('asd')
-                            return false;
-                        }
 
                 switch (piece.charAt(1)) {
                     case 'P':
-
+                        if (travelThroughPiece()) {
+                            console.log('asd')
+                            return false;
+                        }
                         if (oldY === 1) {
                             if (y !== 2 && y !== 3) {
                                 return false;
