@@ -63,6 +63,39 @@ function Chessboard() {
     }
 
     const rulesOfChess = (y, x, newTile) => {
+        const travelThroughPiece = () => {
+            if (y !== oldY && x === oldX) {
+                if (y > oldY) {
+                    for (let i = y; i > oldY; i--) {
+                        if (board[i][x] !== null) {
+                            return true;
+                        }
+                    }
+                } else if (y < oldY) {
+                    for (let i = y; i < oldY; i++) {
+                        if (board[i][x] !== null) {
+                            return true;
+                        }
+                    }
+                }
+            } else if (x !== oldX && y === oldY) {
+                if (x > oldX) {
+                    for (let i = x; i > oldX; i--) {
+                        if (board[y][i] !== null) {
+                            return true;
+                        }
+                    }
+                } else if (x < oldX) {
+                    for (let i = x; i < oldX; i++) {
+                        if (board[y][i] !== null) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
         if (piece.charAt(0) === blackOrWhite.charAt(0)) {
             if (piece.charAt(0) === 'w') {
                 if (newTile != null) {
@@ -70,6 +103,9 @@ function Chessboard() {
                         return false;
                     }
                 }
+                if (travelThroughPiece()) {
+                            return false;
+                        }
 
                 switch (piece.charAt(1)) {
                     case 'P':
@@ -103,9 +139,14 @@ function Chessboard() {
                         return false;
                     }
                 }
+                if (travelThroughPiece()) {
+                            console.log('asd')
+                            return false;
+                        }
 
                 switch (piece.charAt(1)) {
                     case 'P':
+
                         if (oldY === 1) {
                             if (y !== 2 && y !== 3) {
                                 return false;
