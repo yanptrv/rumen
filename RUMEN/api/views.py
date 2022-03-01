@@ -6,13 +6,8 @@ from rest_framework import generics, status
 from .serializers import ChessBoardSerializer, CreateBoardSerializer
 from .models import ChessBoard
 
+
 # Create your views here.
-
-# myBoard = ChessBoard.objects.create()
-
-
-# ChessBoard.objects.all().delete()
-
 
 class BoardView(generics.ListAPIView):
     queryset = ChessBoard.objects.all()
@@ -21,6 +16,10 @@ class BoardView(generics.ListAPIView):
 
 class GetBoard(APIView):
     serializer_class = ChessBoardSerializer
+    lookup_url_kwarg = 'code'
+
+    def get(self, request):
+        code = request.GET.get(self.lookup_url_kwarg)
 
 
 class CreateBoardView(APIView):

@@ -7,6 +7,8 @@ let flagForMove = false;
 let piece = '';
 let blackOrWhite = ''
 let didLoad = false;
+let oldX = ''
+let oldY = ''
 
 
 function Chessboard() {
@@ -31,28 +33,149 @@ function Chessboard() {
             if (board[y][x] != null) {
                 piece = board[y][x];
                 board[y][x] = null;
+                oldX = x;
+                oldY = y;
                 flag = false;
             }
         } else {
-            board[y][x] = piece;
+            if (rulesOfChess(y, x, board[y][x])) {
+                board[y][x] = piece;
+                const sendPOST = {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        personToMove: blackOrWhite,
+                        board: boardToFEN(),
+                    }),
+                };
+                fetch('/api/create', sendPOST)
+                    .then((response) => response.json())
+                    .then((data) => console.log(data))
+            } else
+                board[oldY][oldX] = piece;
+
             flag = true;
 
-            flagForMove = !flagForMove
-
-            const sendPOST = {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    personToMove: blackOrWhite,
-                    board: boardToFEN(),
-                }),
-            };
-            fetch('/api/create', sendPOST)
-                .then((response) => response.json())
-                .then((data) => console.log(data))
         }
 
         setJSXBoard(board);
+
+    }
+
+    const rulesOfChess = (y, x, newTile) => {
+        const travelThroughPiece = () => {
+            if (y !== oldY && x === oldX) {
+                if (y > oldY) {
+                    for (let i = y; i > oldY; i--) {
+                        if (board[i][x] !== null) {
+                            return true;
+                        }
+                    }
+                } else if (y < oldY) {
+                    for (let i = y; i < oldY; i++) {
+                        if (board[i][x] !== null) {
+                            return true;
+                        }
+                    }
+                }
+            } else if (x !== oldX && y === oldY) {
+                if (x > oldX) {
+                    for (let i = x; i > oldX; i--) {
+                        if (board[y][i] !== null) {
+                            return true;
+                        }
+                    }
+                } else if (x < oldX) {
+                    for (let i = x; i < oldX; i++) {
+                        if (board[y][i] !== null) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        if (piece.charAt(0) === blackOrWhite.charAt(0)) {
+            if (piece.charAt(0) === 'w') {
+                if (newTile != null) {
+                    if (newTile.charAt(0) === 'w') {
+                        return false;
+                    }
+                }
+                if (travelThroughPiece()) {
+                            return false;
+                        }
+
+                switch (piece.charAt(1)) {
+                    case 'P':
+                        if (oldY === 6) {
+                            if (y !== 4 && y !== 5) {
+                                return false;
+                            }
+                        } else {
+                            if (oldY - y !== 1) {
+                                return false;
+                            }
+                        }
+                        if (newTile != null) {
+                            if (x !== oldX + 1 && x !== oldX - 1 && oldY || oldY - y !== 1) {
+                                return false;
+                            }
+
+                        } else {
+                            if (x !== oldX)
+                                return false;
+                        }
+                        if (y === 0) {
+                            piece = 'wQ';
+                        }
+
+
+                }
+            } else if (piece.charAt(0) === 'b') {
+                if (newTile != null) {
+                    if (newTile.charAt(0) === 'b') {
+                        return false;
+                    }
+                }
+                if (travelThroughPiece()) {
+                            console.log('asd')
+                            return false;
+                        }
+
+                switch (piece.charAt(1)) {
+                    case 'P':
+
+                        if (oldY === 1) {
+                            if (y !== 2 && y !== 3) {
+                                return false;
+                            }
+                        } else {
+                            if (y - oldY !== 1) {
+                                return false;
+                            }
+                        }
+                        if (newTile != null) {
+                            if (x !== oldX + 1 && x !== oldX - 1 || y - oldY !== 1) {
+                                return false;
+                            }
+                        } else {
+                            if (x !== oldX)
+                                return false;
+                        }
+
+                        if (y === 7) {
+                            piece = 'bQ';
+                        }
+
+                }
+            }
+            flagForMove = !flagForMove
+            return true
+        } else {
+            return false
+        }
 
     }
 
@@ -106,11 +229,8 @@ function Chessboard() {
                     board[y][x] = split[y].charAt(z) + split[y].charAt(z + 1);
                     z += 2;
                 }
-
-
             }
         }
-        console.log(board);
     }
 
     // copying the array with chess pieces and turning them into div classes
@@ -143,16 +263,22 @@ function Chessboard() {
         setJSXBoard(newArray);
     }
 
+    const fetchBoard = async () => {
+        let response = await fetch('/api/chessboard');
+        return await response.json();
+    }
+
     // during each re-render/ jsx board change we call the conversion function
 
     useEffect(() => {
             if (!didLoad) {
-                fetch('/api/chessboard').then((response) => response.json()).then((data) => {
+                fetchBoard().then(data => {
                     FENtoBoard(data[0]['board']);
                     flagForMove = data[0]['personToMove'] === 'white';
                 })
                 didLoad = true;
             }
+            // console.log('asd')
             renderPieces();
         }
     );
