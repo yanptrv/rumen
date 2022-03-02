@@ -140,12 +140,12 @@ function Chessboard() {
                         }
                         break;
                     case 'N':
-                        if (y+2 === oldY || y-2 === oldY) {
-                            if (x+1 !== oldX && x-1 !== oldX) {
+                        if (y + 2 === oldY || y - 2 === oldY) {
+                            if (x + 1 !== oldX && x - 1 !== oldX) {
                                 return false;
                             }
-                        } else if (y+1 === oldY || y-1 === oldY) {
-                            if (x+2 !== oldX && x-2 !== oldX) {
+                        } else if (y + 1 === oldY || y - 1 === oldY) {
+                            if (x + 2 !== oldX && x - 2 !== oldX) {
                                 return false;
                             }
                         } else {
@@ -194,6 +194,19 @@ function Chessboard() {
                             return false;
                         }
                         if (x !== oldX && y !== oldY) {
+                            return false;
+                        }
+                        break;
+                    case 'N':
+                        if (y + 2 === oldY || y - 2 === oldY) {
+                            if (x + 1 !== oldX && x - 1 !== oldX) {
+                                return false;
+                            }
+                        } else if (y + 1 === oldY || y - 1 === oldY) {
+                            if (x + 2 !== oldX && x - 2 !== oldX) {
+                                return false;
+                            }
+                        } else {
                             return false;
                         }
                         break;
