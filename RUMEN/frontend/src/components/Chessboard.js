@@ -63,6 +63,9 @@ function Chessboard() {
     }
 
     const rulesOfChess = (y, x, newTile) => {
+        if (board[y][x] === 'wK' || board[y][x] === 'bK') {
+            return false;
+        }
         const travelThroughPiece = () => {
             if (y !== oldY && x === oldX) {
                 if (y > oldY) {
