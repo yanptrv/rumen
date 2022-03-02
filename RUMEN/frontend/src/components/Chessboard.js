@@ -169,6 +169,45 @@ function Chessboard() {
                             return false;
                         }
                         break;
+                    case 'B':
+                        if (x === oldX) {
+                            if (y === oldY) {
+                                return false;
+                            }
+                        }
+                        if (Math.abs(x - oldX) !== Math.abs(y - oldY)) {
+                            return false;
+                        }
+                        if (y < oldY) {
+                            if (x < oldX) {
+                                for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                    if (board[oldY - i][(oldX - i)] !== null) {
+                                        return false;
+                                    }
+                                }
+                            } else if (x > oldX) {
+                                for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                    if (board[oldY - i][(oldX + i)] !== null) {
+                                        return false;
+                                    }
+                                }
+                            }
+                        } else if (y > oldY) {
+                            if (x < oldX) {
+                                for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                    if (board[oldY + i][oldX - i] !== null) {
+                                        return false;
+                                    }
+                                }
+                            } else if (x > oldX) {
+                                for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                    if (board[oldY + i][oldX + i] !== null) {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        break;
 
                 }
             } else if (piece.charAt(0) === 'b') {
@@ -239,6 +278,29 @@ function Chessboard() {
                         }
                         if (x + 1 !== oldX && x - 1 !== oldX && x !== oldX) {
                             return false;
+                        }
+                        break;
+                    case 'B':
+                        if (x === oldX) {
+                            if (y === oldY) {
+                                return false;
+                            }
+                        }
+                        if (Math.abs(x - oldX) !== Math.abs(y - oldY)) {
+                            return false;
+                        }
+                        if (y < oldY) {
+                            for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                if (board[oldY - i][Math.abs(oldX - i)] !== null) {
+                                    return false;
+                                }
+                            }
+                        } else if (y > oldY) {
+                            for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                if (board[oldY + i][oldX + i] !== null) {
+                                    return false;
+                                }
+                            }
                         }
                         break;
                 }
