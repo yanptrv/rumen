@@ -5,10 +5,16 @@ let board = Array.from(Array(8), () => new Array(8));
 let flag = true;
 let flagForMove = false;
 let piece = '';
-let blackOrWhite = ''
+let blackOrWhite = '';
 let didLoad = false;
-let oldX = ''
-let oldY = ''
+let oldX = '';
+let oldY = '';
+let blackKingNotMoved = true;
+let whiteKingNotMoved = true;
+let blackRook1NotMoved = true;
+let blackRook2NotMoved = true;
+let whiteRook1NotMoved = true;
+let whiteRook2NotMoved = true;
 
 
 function Chessboard() {
@@ -135,14 +141,25 @@ function Chessboard() {
                         }
                         break;
                     case 'R':
+                        if (x === oldX && y === oldY) {
+                            return false;
+                        }
                         if (travelThroughPiece()) {
                             return false;
                         }
                         if (x !== oldX && y !== oldY) {
                             return false;
                         }
+                        if (x === 0 && whiteRook1NotMoved) {
+                            whiteRook1NotMoved = false;
+                        } else if (x === 7 && whiteRook2NotMoved) {
+                            whiteRook2NotMoved = false;
+                        }
                         break;
                     case 'N':
+                        if (x === oldX && y === oldY) {
+                            return false;
+                        }
                         if (y + 2 === oldY || y - 2 === oldY) {
                             if (x + 1 !== oldX && x - 1 !== oldX) {
                                 return false;
@@ -156,10 +173,8 @@ function Chessboard() {
                         }
                         break;
                     case 'K':
-                        if (y === oldY) {
-                            if (x === oldX) {
-                                return false;
-                            }
+                        if (x === oldX && y === oldY) {
+                            return false;
                         }
                         if (y + 1 !== oldY && y - 1 !== oldY && y !== oldY) {
                             console.log('a')
@@ -168,12 +183,13 @@ function Chessboard() {
                         if (x + 1 !== oldX && x - 1 !== oldX && x !== oldX) {
                             return false;
                         }
+                        if (whiteKingNotMoved) {
+                            whiteKingNotMoved = false;
+                        }
                         break;
                     case 'B':
-                        if (x === oldX) {
-                            if (y === oldY) {
-                                return false;
-                            }
+                        if (x === oldX && y === oldY) {
+                            return false;
                         }
                         if (Math.abs(x - oldX) !== Math.abs(y - oldY)) {
                             return false;
@@ -246,14 +262,25 @@ function Chessboard() {
                         }
                         break;
                     case 'R':
+                        if (x === oldX && y === oldY) {
+                            return false;
+                        }
                         if (travelThroughPiece()) {
                             return false;
                         }
                         if (x !== oldX && y !== oldY) {
                             return false;
                         }
+                        if (x === 0 && blackRook1NotMoved) {
+                            blackRook1NotMoved = false;
+                        } else if (x === 7 && blackRook2NotMoved) {
+                            blackRook2NotMoved = false;
+                        }
                         break;
                     case 'N':
+                        if (x === oldX && y === oldY) {
+                            return false;
+                        }
                         if (y + 2 === oldY || y - 2 === oldY) {
                             if (x + 1 !== oldX && x - 1 !== oldX) {
                                 return false;
@@ -267,10 +294,8 @@ function Chessboard() {
                         }
                         break;
                     case 'K':
-                        if (y === oldY) {
-                            if (x === oldX) {
-                                return false;
-                            }
+                        if (x === oldX && y === oldY) {
+                            return false;
                         }
                         if (y + 1 !== oldY && y - 1 !== oldY && y !== oldY) {
                             console.log('a')
@@ -279,26 +304,43 @@ function Chessboard() {
                         if (x + 1 !== oldX && x - 1 !== oldX && x !== oldX) {
                             return false;
                         }
+                        if (blackKingNotMoved) {
+                            blackKingNotMoved = false;
+                        }
                         break;
                     case 'B':
-                        if (x === oldX) {
-                            if (y === oldY) {
-                                return false;
-                            }
+                        if (x === oldX && y === oldY) {
+                            return false;
                         }
                         if (Math.abs(x - oldX) !== Math.abs(y - oldY)) {
                             return false;
                         }
                         if (y < oldY) {
-                            for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                if (board[oldY - i][Math.abs(oldX - i)] !== null) {
-                                    return false;
+                            if (x < oldX) {
+                                for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                    if (board[oldY - i][(oldX - i)] !== null) {
+                                        return false;
+                                    }
+                                }
+                            } else if (x > oldX) {
+                                for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                    if (board[oldY - i][(oldX + i)] !== null) {
+                                        return false;
+                                    }
                                 }
                             }
                         } else if (y > oldY) {
-                            for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                if (board[oldY + i][oldX + i] !== null) {
-                                    return false;
+                            if (x < oldX) {
+                                for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                    if (board[oldY + i][oldX - i] !== null) {
+                                        return false;
+                                    }
+                                }
+                            } else if (x > oldX) {
+                                for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                    if (board[oldY + i][oldX + i] !== null) {
+                                        return false;
+                                    }
                                 }
                             }
                         }
