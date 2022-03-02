@@ -66,13 +66,13 @@ function Chessboard() {
         const travelThroughPiece = () => {
             if (y !== oldY && x === oldX) {
                 if (y > oldY) {
-                    for (let i = y; i > oldY; i--) {
+                    for (let i = y - 1; i > oldY; i--) {
                         if (board[i][x] !== null) {
                             return true;
                         }
                     }
                 } else if (y < oldY) {
-                    for (let i = y; i < oldY; i++) {
+                    for (let i = y + 1; i < oldY; i++) {
                         if (board[i][x] !== null) {
                             return true;
                         }
@@ -80,13 +80,13 @@ function Chessboard() {
                 }
             } else if (x !== oldX && y === oldY) {
                 if (x > oldX) {
-                    for (let i = x; i > oldX; i--) {
+                    for (let i = x - 1; i > oldX; i--) {
                         if (board[y][i] !== null) {
                             return true;
                         }
                     }
                 } else if (x < oldX) {
-                    for (let i = x; i < oldX; i++) {
+                    for (let i = x + 1; i < oldX; i++) {
                         if (board[y][i] !== null) {
                             return true;
                         }
@@ -130,7 +130,28 @@ function Chessboard() {
                         if (y === 0) {
                             piece = 'wQ';
                         }
-
+                        break;
+                    case 'R':
+                        if (travelThroughPiece()) {
+                            return false;
+                        }
+                        if (x !== oldX && y !== oldY) {
+                            return false;
+                        }
+                        break;
+                    case 'N':
+                        if (y + 2 === oldY || y - 2 === oldY) {
+                            if (x + 1 !== oldX && x - 1 !== oldX) {
+                                return false;
+                            }
+                        } else if (y + 1 === oldY || y - 1 === oldY) {
+                            if (x + 2 !== oldX && x - 2 !== oldX) {
+                                return false;
+                            }
+                        } else {
+                            return false;
+                        }
+                        break;
 
                 }
             } else if (piece.charAt(0) === 'b') {
@@ -167,7 +188,28 @@ function Chessboard() {
                         if (y === 7) {
                             piece = 'bQ';
                         }
-
+                        break;
+                    case 'R':
+                        if (travelThroughPiece()) {
+                            return false;
+                        }
+                        if (x !== oldX && y !== oldY) {
+                            return false;
+                        }
+                        break;
+                    case 'N':
+                        if (y + 2 === oldY || y - 2 === oldY) {
+                            if (x + 1 !== oldX && x - 1 !== oldX) {
+                                return false;
+                            }
+                        } else if (y + 1 === oldY || y - 1 === oldY) {
+                            if (x + 2 !== oldX && x - 2 !== oldX) {
+                                return false;
+                            }
+                        } else {
+                            return false;
+                        }
+                        break;
                 }
             }
             flagForMove = !flagForMove
