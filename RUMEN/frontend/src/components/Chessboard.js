@@ -152,6 +152,20 @@ function Chessboard() {
                             return false;
                         }
                         break;
+                    case 'K':
+                        if (y === oldY) {
+                            if (x === oldX) {
+                                return false;
+                            }
+                        }
+                        if (y + 1 !== oldY && y - 1 !== oldY && y !== oldY) {
+                            console.log('a')
+                            return false;
+                        }
+                        if (x + 1 !== oldX && x - 1 !== oldX && x !== oldX) {
+                            return false;
+                        }
+                        break;
 
                 }
             } else if (piece.charAt(0) === 'b') {
@@ -207,6 +221,20 @@ function Chessboard() {
                                 return false;
                             }
                         } else {
+                            return false;
+                        }
+                        break;
+                    case 'K':
+                        if (y === oldY) {
+                            if (x === oldX) {
+                                return false;
+                            }
+                        }
+                        if (y + 1 !== oldY && y - 1 !== oldY && y !== oldY) {
+                            console.log('a')
+                            return false;
+                        }
+                        if (x + 1 !== oldX && x - 1 !== oldX && x !== oldX) {
                             return false;
                         }
                         break;
