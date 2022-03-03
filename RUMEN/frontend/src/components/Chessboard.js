@@ -174,6 +174,33 @@ function Chessboard() {
                         }
                         break;
                     case 'K':
+                        if (x + 2 === oldX) {
+                            if (travelThroughPiece()) {
+                                return false;
+                            }
+                            if (whiteRook1NotMoved) {
+                                if (whiteKingNotMoved) {
+                                    board[7][0] = null;
+                                    board[y][x + 1] = 'wR';
+                                    whiteKingNotMoved = false;
+                                    whiteRook1NotMoved = false;
+                                    break;
+                                }
+                            }
+                        } else if (x - 2 === oldX) {
+                            if (travelThroughPiece()) {
+                                return false;
+                            }
+                            if (whiteRook2NotMoved) {
+                                if (whiteKingNotMoved) {
+                                    board[7][7] = null;
+                                    board[y][x - 1] = 'wR';
+                                    whiteKingNotMoved = false;
+                                    whiteRook2NotMoved = false;
+                                    break;
+                                }
+                            }
+                        }
                         if (x === oldX && y === oldY) {
                             return false;
                         }
@@ -342,6 +369,33 @@ function Chessboard() {
                         }
                         break;
                     case 'K':
+                        if (x + 2 === oldX) {
+                            if (travelThroughPiece()) {
+                                return false;
+                            }
+                            if (blackRook1NotMoved) {
+                                if (blackKingNotMoved) {
+                                    board[0][0] = null;
+                                    board[y][x + 1] = 'bR';
+                                    blackKingNotMoved = false;
+                                    blackRook1NotMoved = false;
+                                    break;
+                                }
+                            }
+                        } else if (x - 2 === oldX) {
+                            if (travelThroughPiece()) {
+                                return false;
+                            }
+                            if (blackRook2NotMoved) {
+                                if (blackKingNotMoved) {
+                                    board[0][7] = null;
+                                    board[y][x - 1] = 'bR';
+                                    blackKingNotMoved = false;
+                                    blackRook2NotMoved = false;
+                                    break;
+                                }
+                            }
+                        }
                         if (x === oldX && y === oldY) {
                             return false;
                         }
