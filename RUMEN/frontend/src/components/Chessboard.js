@@ -69,6 +69,7 @@ function Chessboard() {
     }
 
     const rulesOfChess = (y, x, newTile) => {
+        console.log(blackOrWhite)
         if (board[y][x] === 'wK' || board[y][x] === 'bK') {
             return false;
         }
@@ -177,7 +178,6 @@ function Chessboard() {
                             return false;
                         }
                         if (y + 1 !== oldY && y - 1 !== oldY && y !== oldY) {
-                            console.log('a')
                             return false;
                         }
                         if (x + 1 !== oldX && x - 1 !== oldX && x !== oldX) {
@@ -224,6 +224,55 @@ function Chessboard() {
                             }
                         }
                         break;
+                    case 'Q':
+                        if (x === oldX && y === oldY) {
+                            return false;
+                        }
+                        if (x === oldX && y !== oldY) {
+                            if (travelThroughPiece()) {
+                                return false;
+                            }
+                            break;
+                        }
+                        if (x !== oldX && y === oldY) {
+                            if (travelThroughPiece()) {
+                                return false;
+                            }
+                            break;
+                        }
+                        if (Math.abs(x - oldX) !== Math.abs(y - oldY)) {
+                            return false;
+                        }
+                        if (y < oldY) {
+                            if (x < oldX) {
+                                for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                    if (board[oldY - i][(oldX - i)] !== null) {
+                                        return false;
+                                    }
+                                }
+                            } else if (x > oldX) {
+                                for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                    if (board[oldY - i][(oldX + i)] !== null) {
+                                        return false;
+                                    }
+                                }
+                            }
+                        } else if (y > oldY) {
+                            if (x < oldX) {
+                                for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                    if (board[oldY + i][oldX - i] !== null) {
+                                        return false;
+                                    }
+                                }
+                            } else if (x > oldX) {
+                                for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                    if (board[oldY + i][oldX + i] !== null) {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        break;
 
                 }
             } else if (piece.charAt(0) === 'b') {
@@ -236,7 +285,6 @@ function Chessboard() {
                 switch (piece.charAt(1)) {
                     case 'P':
                         if (travelThroughPiece()) {
-                            console.log('asd')
                             return false;
                         }
                         if (oldY === 1) {
@@ -298,7 +346,6 @@ function Chessboard() {
                             return false;
                         }
                         if (y + 1 !== oldY && y - 1 !== oldY && y !== oldY) {
-                            console.log('a')
                             return false;
                         }
                         if (x + 1 !== oldX && x - 1 !== oldX && x !== oldX) {
@@ -311,6 +358,55 @@ function Chessboard() {
                     case 'B':
                         if (x === oldX && y === oldY) {
                             return false;
+                        }
+                        if (Math.abs(x - oldX) !== Math.abs(y - oldY)) {
+                            return false;
+                        }
+                        if (y < oldY) {
+                            if (x < oldX) {
+                                for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                    if (board[oldY - i][(oldX - i)] !== null) {
+                                        return false;
+                                    }
+                                }
+                            } else if (x > oldX) {
+                                for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                    if (board[oldY - i][(oldX + i)] !== null) {
+                                        return false;
+                                    }
+                                }
+                            }
+                        } else if (y > oldY) {
+                            if (x < oldX) {
+                                for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                    if (board[oldY + i][oldX - i] !== null) {
+                                        return false;
+                                    }
+                                }
+                            } else if (x > oldX) {
+                                for (let i = 1; i < Math.abs(y - oldY); i++) {
+                                    if (board[oldY + i][oldX + i] !== null) {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case 'Q':
+                        if (x === oldX && y === oldY) {
+                            return false;
+                        }
+                        if (x === oldX && y !== oldY) {
+                            if (travelThroughPiece()) {
+                                return false;
+                            }
+                            break;
+                        }
+                        if (x !== oldX && y === oldY) {
+                            if (travelThroughPiece()) {
+                                return false;
+                            }
+                            break;
                         }
                         if (Math.abs(x - oldX) !== Math.abs(y - oldY)) {
                             return false;
@@ -454,7 +550,6 @@ function Chessboard() {
                 })
                 didLoad = true;
             }
-            // console.log('asd')
             renderPieces();
         }
     );
