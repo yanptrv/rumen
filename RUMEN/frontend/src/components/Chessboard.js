@@ -15,10 +15,10 @@ let blackRook1NotMoved = true;
 let blackRook2NotMoved = true;
 let whiteRook1NotMoved = true;
 let whiteRook2NotMoved = true;
+let code = ''
 
 
 function Chessboard() {
-
 
     const [jsxBoard, setJSXBoard] = useState(
         Array.from(Array(8), () => new Array(8))
@@ -590,7 +590,10 @@ function Chessboard() {
     }
 
     const fetchBoard = async () => {
-        let response = await fetch('/api/chessboard');
+        let response = await fetch('/api/chessboard?code=' + code[1]);
+        if (!response.ok) {
+            window.location.href = '';
+        }
         return await response.json();
     }
 
@@ -598,9 +601,10 @@ function Chessboard() {
 
     useEffect(() => {
             if (!didLoad) {
+                code = window.location.pathname.split('/');
                 fetchBoard().then(data => {
-                    FENtoBoard(data[0]['board']);
-                    flagForMove = data[0]['personToMove'] === 'white';
+                    FENtoBoard(data['board']);
+                    flagForMove = data['personToMove'] === 'white';
                 })
                 didLoad = true;
             }

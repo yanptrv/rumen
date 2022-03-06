@@ -18,7 +18,7 @@ class ChessBoard(models.Model):
     host = models.CharField(max_length=64, unique=True, default='')
     board = models.CharField(max_length=128, default='bRbNbBbQbKbBbNbR/bPbPbPbPbPbPbPbP/8/8/8/8/wPwPwPwPwPwPwPwP'
                                                      '/wRwNwBwQwKwBwNwR')
-    personToMove = models.CharField(max_length=8, default='white')
+    personToMove = models.CharField(max_length=8, default='black')
 
     def nextToMove(self):
         if self.personToMove == 'white':
