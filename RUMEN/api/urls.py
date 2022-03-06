@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import BoardView, CreateBoardView
+from .views import GetBoard, CreateBoardView
 
 urlpatterns = [
-    path('chessboard', BoardView.as_view()),
+    path('chessboard', GetBoard.as_view()),
     path('create', CreateBoardView.as_view()),
 ]
