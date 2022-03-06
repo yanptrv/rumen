@@ -20,6 +20,9 @@ class GetBoard(APIView):
 
     def get(self, request):
         code = request.GET.get(self.lookup_url_kwarg)
+        if ChessBoard.objects.filter(code=code).exists():
+            return Response(ChessBoardSerializer(ChessBoard.objects.filter(code=code)[0]).data, status=status.HTTP_200_OK)
+        return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CreateBoardView(APIView):
@@ -33,7 +36,7 @@ class CreateBoardView(APIView):
         if serializer.is_valid():
             host = self.request.session.session_key
             board = 'bRbNbBbQbKbBbNbR/bPbPbPbPbPbPbPbP/8/8/8/8/wPwPwPwPwPwPwPwP/wRwNwBwQwKwBwNwR'
-            personToMove = 'white'
+            personToMove = 'black'
             queryset = ChessBoard.objects.filter(host=host)
             if queryset.exists():
                 chessBoard = queryset[0]
