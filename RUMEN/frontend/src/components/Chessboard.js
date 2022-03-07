@@ -20,7 +20,7 @@ let blackKingMustMove = false;
 let code = ''
 
 
-function Chessboard() {
+export default function Chessboard() {
 
     const [jsxBoard, setJSXBoard] = useState(
         Array.from(Array(8), () => new Array(8))
@@ -672,7 +672,7 @@ function Chessboard() {
     }
 
     const fetchBoard = async () => {
-        let response = await fetch('/api/chessboard?code=' + code[1]);
+        let response = await fetch('/api/chessboard?code=' + code[2]);
         if (!response.ok) {
             window.location.href = '';
         }
@@ -699,6 +699,4 @@ function Chessboard() {
             {jsxBoard}
         </div>
     );
-}
-
-export default Chessboard
+};

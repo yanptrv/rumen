@@ -7,26 +7,15 @@ html, body {
     background-color: darkslategrey;
 }
 
-#main {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-}
-
-#app {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-}
-
 #chessboard {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 100px;
+    width: 640px;
+    height: 640px;
     display: grid;
     grid-template-columns: repeat(8, 80px);
     grid-template-rows: repeat(8, 80px);
-    place-self: center;
     outline: black solid 2px;
 }
 
