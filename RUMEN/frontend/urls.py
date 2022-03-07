@@ -2,5 +2,7 @@ from django.urls import path
 from .views import index
 
 urlpatterns = [
-    path('<str:idCode>', index),
+    path('home', index),
+    path('join', index),
+    path('join/<str:gameCode>', index)
 ]
