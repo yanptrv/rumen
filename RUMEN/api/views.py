@@ -1,5 +1,3 @@
-from django.shortcuts import render
-from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics, status
@@ -21,7 +19,8 @@ class GetBoard(APIView):
     def get(self, request):
         code = request.GET.get(self.lookup_url_kwarg)
         if ChessBoard.objects.filter(code=code).exists():
-            return Response(ChessBoardSerializer(ChessBoard.objects.filter(code=code)[0]).data, status=status.HTTP_200_OK)
+            return Response(ChessBoardSerializer(ChessBoard.objects.filter(code=code)[0]).data,
+                            status=status.HTTP_200_OK)
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
 

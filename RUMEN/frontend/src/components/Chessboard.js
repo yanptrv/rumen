@@ -15,6 +15,8 @@ let blackRook1NotMoved = true;
 let blackRook2NotMoved = true;
 let whiteRook1NotMoved = true;
 let whiteRook2NotMoved = true;
+let whiteKingMustMove = false;
+let blackKingMustMove = false;
 let code = ''
 
 
@@ -24,11 +26,53 @@ function Chessboard() {
         Array.from(Array(8), () => new Array(8))
     );
 
+    const checkForCheck = (colorFirstLetter) => {
+        let kingX;
+        let kingY;
+        if (colorFirstLetter === 'w') {
+            for (let y = 0; y < 8; y++) {
+                for (let x = 0; x < 8; x++) {
+                    if (board[y][x] === 'bK') {
+                        kingX = x;
+                        kingY = y;
+                    }
+                }
+            }
+        } else if (colorFirstLetter === 'b') {
+            for (let y = 0; y < 8; y++) {
+                for (let x = 0; x < 8; x++) {
+                    if (board[y][x] === 'wK') {
+                        kingX = x;
+                        kingY = y;
+                    }
+                }
+            }
+        }
+        for (let y = 0; y < 8; y++) {
+            for (let x = 0; x < 8; x++) {
+                if (board[y][x].charAt(0) === colorFirstLetter) {
+                    oldX = x;
+                    oldY = y;
+                    if (rulesOfChess(kingY, kingX, board[kingY][kingX])) {
+                        if (colorFirstLetter === 'b') {
+                            blackKingMustMove = true;
+                        } else if (colorFirstLetter === 'w') {
+                            whiteKingMustMove = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     // moving pieces from one note to another
     // moving them through the board array and placing them into the jsx board
 
     const redirect = (y, x) => {
+
+        //checking for white or black to move
+
         if (flagForMove) {
             blackOrWhite = 'black'
         } else {
@@ -36,6 +80,9 @@ function Chessboard() {
         }
 
         if (flag) {
+
+            //removing the piece and saving its coordinates
+
             if (board[y][x] != null) {
                 piece = board[y][x];
                 board[y][x] = null;
@@ -44,6 +91,9 @@ function Chessboard() {
                 flag = false;
             }
         } else {
+
+            //checking if the move is legal, if not returning it to its original place
+
             if (rulesOfChess(y, x, board[y][x])) {
                 board[y][x] = piece;
                 const sendPOST = {
@@ -54,9 +104,7 @@ function Chessboard() {
                         board: boardToFEN(),
                     }),
                 };
-                fetch('/api/create', sendPOST)
-                    .then((response) => response.json())
-                    .then((data) => console.log(data))
+                fetch('/api/create', sendPOST);
             } else
                 board[oldY][oldX] = piece;
 
@@ -69,10 +117,10 @@ function Chessboard() {
     }
 
     const rulesOfChess = (y, x, newTile) => {
-        console.log(blackOrWhite)
-        if (board[y][x] === 'wK' || board[y][x] === 'bK') {
-            return false;
-        }
+
+
+        //checking if there are pieces when moving horizontally or vertically
+
         const travelThroughPiece = () => {
             if (y !== oldY && x === oldX) {
                 if (y > oldY) {
@@ -109,7 +157,15 @@ function Chessboard() {
         if (piece.charAt(0) === blackOrWhite.charAt(0)) {
             if (piece.charAt(0) === 'w') {
                 if (newTile != null) {
+                    if (newTile.charAt(1) === 'K') {
+                        return false;
+                    }
                     if (newTile.charAt(0) === 'w') {
+                        return false;
+                    }
+                }
+                if (whiteKingMustMove) {
+                    if (piece.charAt(1) !== 'K') {
                         return false;
                     }
                 }
@@ -213,6 +269,15 @@ function Chessboard() {
                         if (whiteKingNotMoved) {
                             whiteKingNotMoved = false;
                         }
+                        if (board[y][x + 1] === 'bK' || board[y][x - 1] === 'bK') {
+                            return false;
+                        } else if (board[y + 1][x] === 'bK' || board[y - 1][x] === 'bK') {
+                            return false;
+                        } else if (board[y + 1][x + 1] === 'bK' || board[y + 1][x - 1] === 'bK') {
+                            return false;
+                        } else if (board[y - 1][x + 1] === 'bK' || board[y - 1][x - 1] === 'bK') {
+                            return false;
+                        }
                         break;
                     case 'B':
                         if (x === oldX && y === oldY) {
@@ -305,6 +370,14 @@ function Chessboard() {
             } else if (piece.charAt(0) === 'b') {
                 if (newTile != null) {
                     if (newTile.charAt(0) === 'b') {
+                        return false;
+                    }
+                    if (newTile.charAt(1) === 'K') {
+                        return false;
+                    }
+                }
+                if (blackKingMustMove) {
+                    if (piece.charAt(1) !== 'K') {
                         return false;
                     }
                 }
@@ -407,6 +480,15 @@ function Chessboard() {
                         }
                         if (blackKingNotMoved) {
                             blackKingNotMoved = false;
+                        }
+                        if (board[y][x + 1] === 'wK' || board[y][x - 1] === 'wK') {
+                            return false;
+                        } else if (board[y + 1][x] === 'wK' || board[y - 1][x] === 'wK') {
+                            return false;
+                        } else if (board[y + 1][x + 1] === 'wK' || board[y + 1][x - 1] === 'wK') {
+                            return false;
+                        } else if (board[y - 1][x + 1] === 'wK' || board[y - 1][x - 1] === 'wK') {
+                            return false;
                         }
                         break;
                     case 'B':
@@ -605,7 +687,7 @@ function Chessboard() {
                 fetchBoard().then(data => {
                     FENtoBoard(data['board']);
                     flagForMove = data['personToMove'] === 'white';
-                })
+                });
                 didLoad = true;
             }
             renderPieces();
