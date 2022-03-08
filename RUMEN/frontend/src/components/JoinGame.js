@@ -1,6 +1,7 @@
 import React from 'react';
-import {Button, Col, Container, FormControl, FormLabel, FormText, Row} from "react-bootstrap";
+import {Button, Col, Container, FormControl, Row} from "react-bootstrap";
 import {AiOutlineRollback} from "react-icons/ai";
+import Footer from "./Footer";
 
 export default function JoinGame() {
     const goHome = () => {
@@ -9,11 +10,11 @@ export default function JoinGame() {
 
     return (
         <>
-            <AiOutlineRollback className={'goBack'} onClick={goHome}/>
+            <AiOutlineRollback className={'goBack text-dark'} onClick={goHome}/>
             <Container>
                 <Row className="welcomeText justify-content-center text-center">
                     <Col>
-                        <h1>Join a Game</h1>
+                        <h1 className={'text-warning'}>Join a Game</h1>
                     </Col>
                 </Row>
                 <Row className="justify-content-center text-center">
@@ -21,12 +22,13 @@ export default function JoinGame() {
                         <FormControl size={'lg'} type={'text'} placeholder={'Input your game code'}/>
                     </Col>
                 </Row>
-                <Row className={'submitButton justify-content-center text-center'}>
+                <Row className={'mt-3 justify-content-center text-center'}>
                     <Col>
                         <Button size={'lg'} variant={'dark'}>Submit</Button>
                     </Col>
-                     </Row>
+                </Row>
             </Container>
+            <Footer/>
         </>
     );
 }
