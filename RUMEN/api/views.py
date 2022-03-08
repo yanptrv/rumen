@@ -4,7 +4,6 @@ from rest_framework import generics, status
 from .serializers import ChessBoardSerializer, CreateBoardSerializer
 from .models import ChessBoard
 
-
 # Create your views here.
 
 class BoardView(generics.ListAPIView):
