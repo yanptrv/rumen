@@ -1,10 +1,28 @@
 html, body {
-    height: 100%;
     margin: 0;
     padding: 0;
+    height: 100%;
     font-family: Consolas, 'Source Code Pro', Menlo, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-    color: #fec85e;
+    color: #FFA900;
     background-color: darkslategrey;
+}
+
+.footer {
+    background-color: #233b3b;
+}
+
+.welcomeText{
+    padding-top: 35vh;
+}
+
+.goBack {
+    width: 35px;
+    height: 35px;
+    margin-left: 0;
+}
+
+.submitButton {
+    padding-top: 10px;
 }
 
 #chessboard {

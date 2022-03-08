@@ -26,7 +26,7 @@ export default function Chessboard() {
         Array.from(Array(8), () => new Array(8))
     );
 
-    const checkForCheck = (colorFirstLetter) => {
+    const heckForCheck = (colorFirstLetter) => {
         let kingX;
         let kingY;
         if (colorFirstLetter === 'w') {
@@ -102,6 +102,7 @@ export default function Chessboard() {
                     body: JSON.stringify({
                         personToMove: blackOrWhite,
                         board: boardToFEN(),
+                        code: code,
                     }),
                 };
                 fetch('/api/create', sendPOST);
