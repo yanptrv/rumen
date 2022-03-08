@@ -3,12 +3,8 @@ html, body {
     padding: 0;
     height: 100%;
     font-family: Consolas, 'Source Code Pro', Menlo, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-    color: #FFA900;
+    /*color: #FFA900;*/
     background-color: darkslategrey;
-}
-
-.footer {
-    background-color: #233b3b;
 }
 
 .welcomeText{
@@ -21,20 +17,15 @@ html, body {
     margin-left: 0;
 }
 
-.submitButton {
-    padding-top: 10px;
-}
-
 #chessboard {
+    margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 100px;
     width: 640px;
     height: 640px;
     display: grid;
     grid-template-columns: repeat(8, 80px);
     grid-template-rows: repeat(8, 80px);
-    outline: black solid 2px;
 }
 
 /*@media screen and (min-width: 800px) {*/
@@ -70,17 +61,15 @@ html, body {
 /*}*/
 
 #chessboard .white {
-    background-color: #d9d9d9;
+    background-color: whitesmoke;
 }
 
 #chessboard .black {
 
-    /*background-color: #64f;*/
-    background-color: grey;
+    background-color: #212529;
 }
 
 .tile {
     display: grid;
-    /*outline: black 2px solid;*/
 }
 

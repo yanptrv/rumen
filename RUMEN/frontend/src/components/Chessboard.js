@@ -1,4 +1,8 @@
 import React, {useEffect, useState} from "react";
+import {AiOutlineRollback} from "react-icons/ai";
+import {CopyToClipboard} from "react-copy-to-clipboard/src";
+import {Button, Col, Container, Row} from "react-bootstrap";
+import Footer from "./Footer";
 
 let board = Array.from(Array(8), () => new Array(8));
 
@@ -6,7 +10,6 @@ let flag = true;
 let flagForMove = false;
 let piece = '';
 let blackOrWhite = '';
-let didLoad = false;
 let oldX = '';
 let oldY = '';
 let blackKingNotMoved = true;
@@ -25,8 +28,9 @@ export default function Chessboard() {
     const [jsxBoard, setJSXBoard] = useState(
         Array.from(Array(8), () => new Array(8))
     );
+    const [didLoad, setDidLoad] = useState(false);
 
-    const heckForCheck = (colorFirstLetter) => {
+    const checkForCheck = (colorFirstLetter) => {
         let kingX;
         let kingY;
         if (colorFirstLetter === 'w') {
@@ -680,6 +684,26 @@ export default function Chessboard() {
         return await response.json();
     }
 
+    const goHome = () => {
+        window.location.href = '/home'
+    }
+
+    const restartGame = () => {
+        const sendPOST = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                personToMove: 'black',
+                board: 'bRbNbBbQbKbBbNbR/bPbPbPbPbPbPbPbP/8/8/8/8/wPwPwPwPwPwPwPwP/wRwNwBwQwKwBwNwR',
+                code: code,
+            }),
+        };
+        fetch('/api/create', sendPOST);
+        setDidLoad(false);
+
+
+    }
+
     // during each re-render/ jsx board change we call the conversion function
 
     useEffect(() => {
@@ -689,15 +713,35 @@ export default function Chessboard() {
                     FENtoBoard(data['board']);
                     flagForMove = data['personToMove'] === 'white';
                 });
-                didLoad = true;
+                setDidLoad(true);
             }
             renderPieces();
         }
     );
 
     return (
-        <div id='chessboard'>
-            {jsxBoard}
-        </div>
+        <>
+            <Container fluid>
+                <Row>
+                    <Col>
+                        <AiOutlineRollback className={'goBack text-dark'} onClick={goHome}/>
+                    </Col>
+                </Row>
+                <Row className={'text-center mt-4'}>
+                    <Col>
+                        <CopyToClipboard text={code[2]}>
+                            <Button size={'lg'} variant={'dark'}>Copy Code</Button>
+                        </CopyToClipboard>
+                    </Col>
+                    <Col>
+                        <Button size={'lg'} variant={'warning'} onClick={restartGame}>Restart Game</Button>
+                    </Col>
+                </Row>
+            </Container>
+            <div id='chessboard'>
+                {jsxBoard}
+            </div>
+            <Footer/>
+        </>
     );
 };
