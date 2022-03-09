@@ -7,8 +7,8 @@ html, body {
     background-color: darkslategrey;
 }
 
-.welcomeText{
-    padding-top: 35vh;
+.welcomeText {
+    padding-top: 30vh;
 }
 
 .goBack {
@@ -28,37 +28,51 @@ html, body {
     grid-template-rows: repeat(8, 80px);
 }
 
-/*@media screen and (min-width: 800px) {*/
-/*    #chessboard {*/
-/*        display: grid;*/
-/*        grid-template-columns: repeat(8, 6rem);*/
-/*        grid-template-rows: repeat(8, 6rem);*/
-/*        place-self: center;*/
-/*        outline: black solid 2px;*/
-/*    }*/
-/*}*/
-
 #chessboard img {
     place-self: center;
     width: 60px;
     height: 60px;
 }
 
-/*@media screen and (min-width: 500px) {*/
-/*    #chessboard img {*/
-/*        place-self: center;*/
-/*        width: 45px;*/
-/*        height: 45px;*/
-/*    }*/
-/*}*/
+@media screen and (max-width: 1000px) {
+    #chessboard {
+        margin-top: 20px;
+        margin-left: auto;
+        margin-right: auto;
+        display: grid;
+        width: 560px;
+        height: 560px;
+        grid-template-columns: repeat(8, 70px);
+        grid-template-rows: repeat(8, 70px);
+        place-self: center;
+    }
 
-/*@media screen and (min-width: 800px) {*/
-/*    #chessboard img {*/
-/*        place-self: center;*/
-/*        width: 75px;*/
-/*        height: 75px;*/
-/*    }*/
-/*}*/
+    #chessboard img {
+        place-self: center;
+        width: 55px;
+        height: 55px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    #chessboard {
+        margin-top: 20px;
+        margin-left: auto;
+        margin-right: auto;
+        display: grid;
+        width: 440px;
+        height: 440px;
+        grid-template-columns: repeat(8, 55px);
+        grid-template-rows: repeat(8, 55px);
+        place-self: center;
+    }
+
+    #chessboard img {
+        place-self: center;
+        width: 45px;
+        height: 45px;
+    }
+}
 
 #chessboard .white {
     background-color: whitesmoke;

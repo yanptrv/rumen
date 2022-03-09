@@ -17,9 +17,9 @@ export default function JoinGame() {
                         <h1 className={'text-warning'}>Join a Game</h1>
                     </Col>
                 </Row>
-                <Row className="justify-content-center text-center">
+                <Row className="justify-content-center text-center mt-5">
                     <Col className={'col-sm-5'}>
-                        <FormControl size={'lg'} type={'text'} placeholder={'Input your game code'}/>
+                        <FormControl className={'text-center'} size={'lg'} type={'text'} placeholder={'Input your game code'}/>
                     </Col>
                 </Row>
                 <Row className={'mt-3 justify-content-center text-center'}>
