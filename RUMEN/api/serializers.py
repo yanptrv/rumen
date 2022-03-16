@@ -9,6 +9,8 @@ class ChessBoardSerializer(serializers.ModelSerializer):
 
 
 class CreateBoardSerializer(serializers.ModelSerializer):
+    code = serializers.CharField(validators=[])
+
     class Meta:
         model = ChessBoard
-        fields = ('board', 'personToMove')
+        fields = ('code', 'board', 'personToMove')
