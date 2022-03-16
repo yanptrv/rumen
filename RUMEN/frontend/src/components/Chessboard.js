@@ -105,15 +105,15 @@ export default function Chessboard() {
             if (rulesOfChess(y, x, newArray)) {
                 newArray[y][x] = piece;
                 const sendPOST = {
-                    method: 'POST',
+                    method: 'PUT',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         personToMove: blackOrWhite,
                         board: boardToFEN(newArray),
-                        code: code,
+                        code: code[2],
                     }),
                 };
-                fetch('/api/create', sendPOST);
+                fetch('/api/update', sendPOST);
             } else {
                 newArray[oldY][oldX] = piece;
             }
@@ -668,15 +668,15 @@ export default function Chessboard() {
 
     const restartGame = () => {
         const sendPOST = {
-            method: 'POST',
+            method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 personToMove: 'black',
                 board: 'bRbNbBbQbKbBbNbR/bPbPbPbPbPbPbPbP/8/8/8/8/wPwPwPwPwPwPwPwP/wRwNwBwQwKwBwNwR',
-                code: code,
+                code: code[2],
             }),
         };
-        fetch('/api/create', sendPOST);
+        fetch('/api/update', sendPOST);
         setDidLoad(false);
     }
 

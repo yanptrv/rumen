@@ -10,8 +10,6 @@ export default function Home() {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                personToMove: 'black',
-                board: 'bRbNbBbQbKbBbNbR/bPbPbPbPbPbPbPbP/8/8/8/8/wPwPwPwPwPwPwPwP/wRwNwBwQwKwBwNwR',
             }),
         };
         fetch('/api/create', sendPOST)
