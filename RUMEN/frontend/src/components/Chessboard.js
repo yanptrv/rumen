@@ -3,7 +3,7 @@ import {AiOutlineRollback} from "react-icons/ai";
 import {CopyToClipboard} from "react-copy-to-clipboard/src";
 import {Button, Col, Container, Row} from "react-bootstrap";
 import Footer from "./Footer";
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from 'react-router-dom';
 
 
 let flag = true;
