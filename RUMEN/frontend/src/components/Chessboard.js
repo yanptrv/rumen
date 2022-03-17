@@ -3,6 +3,8 @@ import {AiOutlineRollback} from "react-icons/ai";
 import {CopyToClipboard} from "react-copy-to-clipboard/src";
 import {Button, Col, Container, Row} from "react-bootstrap";
 import Footer from "./Footer";
+import {ToastContainer, toast} from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
 import {useNavigate} from 'react-router-dom';
 
 
@@ -21,6 +23,7 @@ let whiteRook2NotMoved = true;
 let whiteKingMustMove = false;
 let blackKingMustMove = false;
 let code = ''
+let secondPlayer;
 
 
 export default function Chessboard() {
@@ -166,6 +169,9 @@ export default function Chessboard() {
 
         if (piece.charAt(0) === blackOrWhite.charAt(0)) {
             if (piece.charAt(0) === 'w') {
+                if (secondPlayer) {
+                    return false;
+                }
                 if (newTile != null) {
                     if (newTile.charAt(1) === 'K') {
                         return false;
@@ -378,6 +384,9 @@ export default function Chessboard() {
 
                 }
             } else if (piece.charAt(0) === 'b') {
+                if (!secondPlayer) {
+                    return false;
+                }
                 if (newTile != null) {
                     if (newTile.charAt(0) === 'b') {
                         return false;
@@ -661,35 +670,42 @@ export default function Chessboard() {
     }
 
     const goHome = () => {
-        window.location.href = '/home'
+        window.location.href = '/'
     }
+
+    const notify = () => toast.dark("Copied to clipboard!", {
+        type: toast.TYPE.SUCCESS,
+    });
 
     // posting a clean version of the board and re-rendering
 
     const restartGame = () => {
-        const sendPOST = {
-            method: 'PUT',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                personToMove: 'black',
-                board: 'bRbNbBbQbKbBbNbR/bPbPbPbPbPbPbPbP/8/8/8/8/wPwPwPwPwPwPwPwP/wRwNwBwQwKwBwNwR',
-                code: code[2],
-            }),
-        };
-        fetch('/api/update', sendPOST);
-        setDidLoad(false);
+        if (!secondPlayer) {
+            const sendPOST = {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    personToMove: 'black',
+                    board: 'bRbNbBbQbKbBbNbR/bPbPbPbPbPbPbPbP/8/8/8/8/wPwPwPwPwPwPwPwP/wRwNwBwQwKwBwNwR',
+                    code: code[2],
+                }),
+            };
+            fetch('/api/update', sendPOST);
+            setDidLoad(false);
+        }
     }
 
     // during each re-render/ jsx board change we call the conversion function
 
     useEffect(() => {
-        console.log('asd');
+            console.log('asd');
             if (!didLoad) {
                 code = window.location.pathname.split('/');
                 fetchBoard().then(data => {
                     FENtoBoard(data['board']);
                     flagForMove = data['personToMove'] === 'white';
                     setDidLoad(true);
+                    secondPlayer = data['secondPlayer'];
                 });
             }
         }, [didLoad]
@@ -706,7 +722,7 @@ export default function Chessboard() {
                 <Row className={'text-center mt-4'}>
                     <Col>
                         <CopyToClipboard text={code[2]}>
-                            <Button size={'lg'} variant={'dark'}>Copy Code</Button>
+                            <Button size={'lg'} variant={'dark'} onClick={notify}>Copy Code</Button>
                         </CopyToClipboard>
                     </Col>
                     <Col>
@@ -736,6 +752,7 @@ export default function Chessboard() {
                 }))}
             </div>
             <Footer/>
+            <ToastContainer/>
         </>
     );
 };
