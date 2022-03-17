@@ -1,6 +1,6 @@
 import React from 'react'
 import {Button, ButtonGroup, Col, Container, Row} from 'react-bootstrap';
-import TextAnimation from "react-animate-text";
+// import TextAnimation from "react-animate-text";
 import Footer from "./Footer";
 
 
@@ -22,7 +22,7 @@ export default function Home() {
             <Container className={'welcomeText'}>
                 <Row className="justify-content-center text-center">
                     <Col>
-                        <TextAnimation><h1 className={'text-warning'}>WELCOME TO RUMEN!</h1></TextAnimation>
+                        <h1 className={'text-warning'}>WELCOME TO RUMEN!</h1>
                     </Col>
                 </Row>
                 <Row className="justify-content-center text-center mt-3">
