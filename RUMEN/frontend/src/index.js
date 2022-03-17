@@ -10,7 +10,7 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path='home' element={<Home/>}/>
+                <Route path='' element={<Home/>}/>
                 <Route path='join' element={<JoinGame/>}/>
                 <Route path='join/:gameCode' element={<Chessboard/>}/>
             </Routes>
