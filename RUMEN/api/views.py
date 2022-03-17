@@ -19,7 +19,9 @@ class GetBoard(APIView):
     def get(self, request):
         code = request.GET.get(self.lookup_url_kwarg)
         if ChessBoard.objects.filter(code=code).exists():
-            return Response(ChessBoardSerializer(ChessBoard.objects.filter(code=code)[0]).data,
+            board = ChessBoardSerializer(ChessBoard.objects.filter(code=code)[0]).data
+            board['secondPlayer'] = self.request.session.session_key != ChessBoard.objects.filter(code=code)[0].host
+            return Response(board,
                             status=status.HTTP_200_OK)
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
