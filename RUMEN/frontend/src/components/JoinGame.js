@@ -7,7 +7,7 @@ import {useNavigate} from 'react-router-dom';
 export default function JoinGame() {
     let navigate = useNavigate();
     const goHome = () => {
-        navigate('/home');
+        navigate('/');
     }
 
     const joinGame = () => {
