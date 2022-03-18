@@ -22,11 +22,19 @@ let whiteRook1NotMoved = true;
 let whiteRook2NotMoved = true;
 let whiteKingMustMove = false;
 let blackKingMustMove = false;
-let code = ''
+let code;
 let secondPlayer;
 
-
 export default function Chessboard() {
+
+    let url = `ws://${window.location.host}/ws/socket-server/`
+    const requestScoket = new WebSocket(url)
+    requestScoket.onmessage = (e) => {
+        let data = JSON.parse(e.data);
+        if (data.message === 'update' && data.type === 'chat' && data.code === code) {
+            setDidLoad(false);
+        }
+    }
 
     const [board, setBoard] = useState(
         Array.from(Array(8), () => new Array(8))
@@ -113,10 +121,15 @@ export default function Chessboard() {
                     body: JSON.stringify({
                         personToMove: blackOrWhite,
                         board: boardToFEN(newArray),
-                        code: code[2],
+                        code: code,
                     }),
                 };
-                fetch('/api/update', sendPOST);
+                fetch('/api/update', sendPOST).then(() => {
+                    requestScoket.send(JSON.stringify({
+                        'message': 'update',
+                        'code': code,
+                    }))
+                });
             } else {
                 newArray[oldY][oldX] = piece;
             }
@@ -502,12 +515,16 @@ export default function Chessboard() {
                         }
                         if (newArray[y][x + 1] === 'wK' || newArray[y][x - 1] === 'wK') {
                             return false;
-                        } else if (newArray[y + 1][x] === 'wK' || newArray[y - 1][x] === 'wK') {
-                            return false;
+                        } else if (y !== 0) {
+                            if (newArray[y + 1][x] === 'wK' || newArray[y - 1][x] === 'wK') {
+                                return false;
+                            }
                         } else if (newArray[y + 1][x + 1] === 'wK' || newArray[y + 1][x - 1] === 'wK') {
                             return false;
-                        } else if (newArray[y - 1][x + 1] === 'wK' || newArray[y - 1][x - 1] === 'wK') {
-                            return false;
+                        } else if (y !== 0) {
+                            if (newArray[y - 1][x + 1] === 'wK' || newArray[y - 1][x - 1] === 'wK') {
+                                return false;
+                            }
                         }
                         break;
                     case 'B':
@@ -659,16 +676,6 @@ export default function Chessboard() {
         }
     }
 
-    // copying the array with chess pieces and turning them into div classes
-
-    const fetchBoard = async () => {
-        let response = await fetch('/api/chessboard?code=' + code[2]);
-        if (!response.ok) {
-            window.location.href = '';
-        }
-        return await response.json();
-    }
-
     const goHome = () => {
         window.location.href = '/'
     }
@@ -687,21 +694,24 @@ export default function Chessboard() {
                 body: JSON.stringify({
                     personToMove: 'black',
                     board: 'bRbNbBbQbKbBbNbR/bPbPbPbPbPbPbPbP/8/8/8/8/wPwPwPwPwPwPwPwP/wRwNwBwQwKwBwNwR',
-                    code: code[2],
+                    code: code,
                 }),
             };
-            fetch('/api/update', sendPOST);
-            setDidLoad(false);
+            fetch('/api/update', sendPOST).then(() => {
+                requestScoket.send(JSON.stringify({
+                    'message': 'update',
+                    'code': code,
+                }))
+            })
         }
     }
 
     // during each re-render/ jsx board change we call the conversion function
 
     useEffect(() => {
-            console.log('asd');
             if (!didLoad) {
-                code = window.location.pathname.split('/');
-                fetchBoard().then(data => {
+                code = window.location.pathname.split('/')[2];
+                fetch('/api/chessboard?code=' + code).then((response) => response.json()).then(data => {
                     FENtoBoard(data['board']);
                     flagForMove = data['personToMove'] === 'white';
                     setDidLoad(true);
@@ -721,7 +731,7 @@ export default function Chessboard() {
                 </Row>
                 <Row className={'text-center mt-4'}>
                     <Col>
-                        <CopyToClipboard text={code[2]}>
+                        <CopyToClipboard text={code}>
                             <Button size={'lg'} variant={'dark'} onClick={notify}>Copy Code</Button>
                         </CopyToClipboard>
                     </Col>
