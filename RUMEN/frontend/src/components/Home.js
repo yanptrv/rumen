@@ -3,14 +3,13 @@ import {Button, ButtonGroup, Col, Container, Row} from 'react-bootstrap';
 // import TextAnimation from "react-animate-text";
 import Footer from "./Footer";
 
-
 export default function Home() {
+
     const createGame = () => {
         const sendPOST = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-            }),
+            body: JSON.stringify({}),
         };
         fetch('/api/create', sendPOST)
             .then((response) => response.json())
