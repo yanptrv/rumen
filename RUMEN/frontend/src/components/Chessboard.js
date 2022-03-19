@@ -27,9 +27,8 @@ let secondPlayer;
 
 export default function Chessboard() {
 
-    let url = `ws://${window.location.host}/ws/socket-server/`
-    const requestScoket = new WebSocket(url)
-    requestScoket.onmessage = (e) => {
+    const requestSocket = new WebSocket(`ws://${window.location.host}/ws/socket-server/`)
+    requestSocket.onmessage = (e) => {
         let data = JSON.parse(e.data);
         if (data.message === 'update' && data.type === 'chat' && data.code === code) {
             setDidLoad(false);
@@ -42,7 +41,8 @@ export default function Chessboard() {
     const [didLoad, setDidLoad] = useState(false);
 
 
-    const checkForCheck = (colorFirstLetter) => {
+    const checkForCheck = (colorFirstLetter, newArray) => {
+
         let kingX;
         let kingY;
         if (colorFirstLetter === 'w') {
@@ -69,7 +69,7 @@ export default function Chessboard() {
                 if (board[y][x].charAt(0) === colorFirstLetter) {
                     oldX = x;
                     oldY = y;
-                    if (rulesOfChess(kingY, kingX, board[kingY][kingX])) {
+                    if (rulesOfChess(kingY, kingX, newArray)) {
                         if (colorFirstLetter === 'b') {
                             blackKingMustMove = true;
                         } else if (colorFirstLetter === 'w') {
@@ -125,7 +125,7 @@ export default function Chessboard() {
                     }),
                 };
                 fetch('/api/update', sendPOST).then(() => {
-                    requestScoket.send(JSON.stringify({
+                    requestSocket.send(JSON.stringify({
                         'message': 'update',
                         'code': code,
                     }))
@@ -698,7 +698,7 @@ export default function Chessboard() {
                 }),
             };
             fetch('/api/update', sendPOST).then(() => {
-                requestScoket.send(JSON.stringify({
+                requestSocket.send(JSON.stringify({
                     'message': 'update',
                     'code': code,
                 }))
