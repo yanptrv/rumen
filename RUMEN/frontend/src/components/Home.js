@@ -6,6 +6,7 @@ import Footer from "./Footer";
 export default function Home() {
 
     const createGame = () => {
+
         const sendPOST = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -14,6 +15,7 @@ export default function Home() {
         fetch('/api/create', sendPOST)
             .then((response) => response.json())
             .then((data) => window.location.href = '/join/' + data['code']);
+
     }
 
     return (

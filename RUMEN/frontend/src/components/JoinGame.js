@@ -5,18 +5,19 @@ import Footer from "./Footer";
 import {useNavigate} from 'react-router-dom';
 
 export default function JoinGame() {
+
     let navigate = useNavigate();
-    const goHome = () => {
-        navigate('/');
-    }
+    const [code, setCode] = useState('');
+
+    const goHome = () => navigate('/');
 
     const joinGame = () => {
+
         if (code !== '') {
             navigate('/join/' + code);
         }
-    }
 
-    const [code, setCode] = useState('');
+    }
 
     return (
         <>

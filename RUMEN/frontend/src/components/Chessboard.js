@@ -7,9 +7,10 @@ import {ToastContainer, toast} from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
 import {useNavigate} from 'react-router-dom';
 
-
-let flag = true;
 let flagForMove = false;
+let code = '';
+let secondPlayer = '';
+let flag = true;
 let piece = '';
 let blackOrWhite = '';
 let oldX = '';
@@ -22,10 +23,10 @@ let whiteRook1NotMoved = true;
 let whiteRook2NotMoved = true;
 let whiteKingMustMove = false;
 let blackKingMustMove = false;
-let code;
-let secondPlayer;
 
 export default function Chessboard() {
+
+    let navigate = useNavigate();
 
     const requestSocket = new WebSocket(`ws://${window.location.host}/ws/socket-server/`)
     requestSocket.onmessage = (e) => {
@@ -81,13 +82,12 @@ export default function Chessboard() {
         }
     }
 
-    // moving pieces from one note to another
-    // moving them through the board array and placing them into the jsx board
+    // moving pieces from one tile to another and validating the move
 
     const redirect = (y, x) => {
-        let newArray = [];
+        let chessBoard = [];
         for (let i = 0; i < board.length; i++) {
-            newArray[i] = board[i].slice();
+            chessBoard[i] = board[i].slice();
         }
 
         //checking for white or black to move
@@ -102,9 +102,9 @@ export default function Chessboard() {
 
             //removing the piece and saving its coordinates
 
-            if (newArray[y][x] != null) {
-                piece = newArray[y][x];
-                newArray[y][x] = null;
+            if (chessBoard[y][x] != null) {
+                piece = chessBoard[y][x];
+                chessBoard[y][x] = null;
                 oldX = x;
                 oldY = y;
                 flag = false;
@@ -113,14 +113,14 @@ export default function Chessboard() {
 
             //checking if the move is legal, if not returning it to its original place
 
-            if (rulesOfChess(y, x, newArray)) {
-                newArray[y][x] = piece;
+            if (rulesOfChess(y, x, chessBoard)) {
+                chessBoard[y][x] = piece;
                 const sendPOST = {
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         personToMove: blackOrWhite,
-                        board: boardToFEN(newArray),
+                        board: boardToFEN(chessBoard),
                         code: code,
                     }),
                 };
@@ -131,15 +131,17 @@ export default function Chessboard() {
                     }))
                 });
             } else {
-                newArray[oldY][oldX] = piece;
+                chessBoard[oldY][oldX] = piece;
             }
 
             flag = true;
         }
 
-        setBoard(newArray);
+        setBoard(chessBoard);
 
     }
+
+    // validating moves
 
     const rulesOfChess = (y, x, newArray) => {
         let newTile = newArray[y][x];
@@ -625,20 +627,21 @@ export default function Chessboard() {
 
     // converting an array with chess pieces to a FEN string
 
-    const boardToFEN = (array) => {
+    const boardToFEN = (chessBoard) => {
+
         let fen = '';
 
         for (let y = 0; y < 8; y++) {
             let nullCounter = 0;
             for (let x = 0; x < 8; x++) {
-                if (array[y][x] === null) {
+                if (chessBoard[y][x] === null) {
                     nullCounter++;
                 } else {
                     if (nullCounter !== 0) {
-                        fen += nullCounter + array[y][x];
+                        fen += nullCounter + chessBoard[y][x];
                         nullCounter = 0;
                     } else if (nullCounter === 0) {
-                        fen += array[y][x];
+                        fen += chessBoard[y][x];
                     }
                 }
             }
@@ -651,42 +654,48 @@ export default function Chessboard() {
         }
 
         return fen
+
     }
 
     // converting a FEN string to an array with chess pieces
 
     const FENtoBoard = (fen) => {
-        let split = fen.split('/');
+
+        let chessBoard = Array.from(Array(8), () => new Array(8));
+        let boardRows = fen.split('/');
 
         for (let y = 0; y < 8; y++) {
-            let z = 0;
+            let rowIndex = 0;
             for (let x = 0; x < 8; x++) {
-                if (/\d/.test(split[y].charAt(z))) {
-                    let j = x + parseInt(split[y].charAt(z))
-                    for (; x < j; x++) {
-                        board[y][x] = null;
+                if (/\d/.test(boardRows[y].charAt(rowIndex))) {
+                    let nullAmount = x + parseInt(boardRows[y].charAt(rowIndex))
+                    for (; x < nullAmount; x++) {
+                        chessBoard[y][x] = null;
                     }
-                    z++;
+                    rowIndex++;
                 }
-                if (/[a-zA-Z]/.test(split[y].charAt(z))) {
-                    board[y][x] = split[y].charAt(z) + split[y].charAt(z + 1);
-                    z += 2;
+                if (/[a-zA-Z]/.test(boardRows[y].charAt(rowIndex))) {
+                    chessBoard[y][x] = boardRows[y].charAt(rowIndex) + boardRows[y].charAt(rowIndex + 1);
+                    rowIndex += 2;
                 }
             }
         }
+        setBoard(chessBoard);
+
     }
 
-    const goHome = () => {
-        window.location.href = '/'
-    }
+    // redirecting to the home page
 
-    const notify = () => toast.dark("Copied to clipboard!", {
-        type: toast.TYPE.SUCCESS,
-    });
+    const goHome = () => navigate('/');
 
-    // posting a clean version of the board and re-rendering
+    // notification when copying the game code
+
+    const notify = () => toast.dark("Copied to clipboard!", {type: toast.TYPE.SUCCESS,});
+
+    // restarting the game to the starting layout
 
     const restartGame = () => {
+
         if (!secondPlayer) {
             const sendPOST = {
                 method: 'PUT',
@@ -704,22 +713,26 @@ export default function Chessboard() {
                 }))
             })
         }
+
     }
 
-    // during each re-render/ jsx board change we call the conversion function
+    // when receiving information from the socket or first time loading fetching data from the api
 
     useEffect(() => {
-            if (!didLoad) {
-                code = window.location.pathname.split('/')[2];
-                fetch('/api/chessboard?code=' + code).then((response) => response.json()).then(data => {
-                    FENtoBoard(data['board']);
-                    flagForMove = data['personToMove'] === 'white';
-                    setDidLoad(true);
-                    secondPlayer = data['secondPlayer'];
-                });
-            }
-        }, [didLoad]
-    );
+
+        console.log('asd')
+
+        if (!didLoad) {
+            code = window.location.pathname.split('/')[2];
+            fetch('/api/chessboard?code=' + code).then((response) => response.json()).then(data => {
+                FENtoBoard(data['board']);
+                flagForMove = data['personToMove'] === 'white';
+                setDidLoad(true);
+                secondPlayer = data['secondPlayer'];
+            });
+        }
+
+    }, [didLoad]);
 
     return (
         <>
