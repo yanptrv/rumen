@@ -42,45 +42,46 @@ export default function Chessboard() {
     const [didLoad, setDidLoad] = useState(false);
 
 
-    const checkForCheck = (colorFirstLetter, newArray) => {
-
-        let kingX;
-        let kingY;
-        if (colorFirstLetter === 'w') {
-            for (let y = 0; y < 8; y++) {
-                for (let x = 0; x < 8; x++) {
-                    if (board[y][x] === 'bK') {
-                        kingX = x;
-                        kingY = y;
-                    }
-                }
-            }
-        } else if (colorFirstLetter === 'b') {
-            for (let y = 0; y < 8; y++) {
-                for (let x = 0; x < 8; x++) {
-                    if (board[y][x] === 'wK') {
-                        kingX = x;
-                        kingY = y;
-                    }
-                }
-            }
-        }
-        for (let y = 0; y < 8; y++) {
-            for (let x = 0; x < 8; x++) {
-                if (board[y][x].charAt(0) === colorFirstLetter) {
-                    oldX = x;
-                    oldY = y;
-                    if (rulesOfChess(kingY, kingX, newArray)) {
-                        if (colorFirstLetter === 'b') {
-                            blackKingMustMove = true;
-                        } else if (colorFirstLetter === 'w') {
-                            whiteKingMustMove = true;
-                        }
-                    }
-                }
-            }
-        }
-    }
+    // const legalMoves = (chessBoard) => {
+    //
+    //     let kingX;
+    //     let kingY;
+    //
+    //     if (blackOrWhite === 'white') {
+    //         for (let y = 0; y < 8; y++) {
+    //             for (let x = 0; x < 8; x++) {
+    //                 if (chessBoard[y][x] === 'wK') {
+    //                     kingY = y;
+    //                     kingX = x;
+    //                 }
+    //             }
+    //         }
+    //     } else if (blackOrWhite === 'black') {
+    //         for (let y = 0; y < 8; y++) {
+    //             for (let x = 0; x < 8; x++) {
+    //                 if (chessBoard[y][x] === 'bK') {
+    //                     kingY = y;
+    //                     kingX = x;
+    //                 }
+    //             }
+    //         }
+    //
+    //         for (let y = 0; y < 8; y++) {
+    //             for (let x = 0; x < 8; x++) {
+    //                 let chessPiece = chessBoard[y][x].charAt(0)
+    //                 if (chessPiece.charAt(0) === 'w') {
+    //                     if (chessPiece.charAt(1) === 'P') {
+    //                         if (chessBoard[y+1][x+1] === 'bK' || chessBoard[y+1][x-1] === 'bK') {
+    //                             blackKingMustMove = true;
+    //                             return;
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //
+    // }
 
     // moving pieces from one tile to another and validating the move
 
@@ -143,9 +144,9 @@ export default function Chessboard() {
 
     // validating moves
 
-    const rulesOfChess = (y, x, newArray) => {
-        let newTile = newArray[y][x];
+    const rulesOfChess = (y, x, chessBoard) => {
 
+        let newTile = chessBoard[y][x];
 
         //checking if there are pieces when moving horizontally or vertically
 
@@ -153,13 +154,13 @@ export default function Chessboard() {
             if (y !== oldY && x === oldX) {
                 if (y > oldY) {
                     for (let i = y - 1; i > oldY; i--) {
-                        if (newArray[i][x] !== null) {
+                        if (chessBoard[i][x] !== null) {
                             return true;
                         }
                     }
                 } else if (y < oldY) {
                     for (let i = y + 1; i < oldY; i++) {
-                        if (newArray[i][x] !== null) {
+                        if (chessBoard[i][x] !== null) {
                             return true;
                         }
                     }
@@ -167,13 +168,13 @@ export default function Chessboard() {
             } else if (x !== oldX && y === oldY) {
                 if (x > oldX) {
                     for (let i = x - 1; i > oldX; i--) {
-                        if (newArray[y][i] !== null) {
+                        if (chessBoard[y][i] !== null) {
                             return true;
                         }
                     }
                 } else if (x < oldX) {
                     for (let i = x + 1; i < oldX; i++) {
-                        if (newArray[y][i] !== null) {
+                        if (chessBoard[y][i] !== null) {
                             return true;
                         }
                     }
@@ -188,10 +189,10 @@ export default function Chessboard() {
                     return false;
                 }
                 if (newTile != null) {
-                    if (newTile.charAt(1) === 'K') {
+                    if (newTile.charAt(0) === 'w') {
                         return false;
                     }
-                    if (newTile.charAt(0) === 'w') {
+                    if (newTile.charAt(1) === 'K') {
                         return false;
                     }
                 }
@@ -267,8 +268,8 @@ export default function Chessboard() {
                             }
                             if (whiteRook1NotMoved) {
                                 if (whiteKingNotMoved) {
-                                    newArray[7][0] = null;
-                                    newArray[y][x + 1] = 'wR';
+                                    chessBoard[7][0] = null;
+                                    chessBoard[y][x + 1] = 'wR';
                                     whiteKingNotMoved = false;
                                     whiteRook1NotMoved = false;
                                     break;
@@ -280,8 +281,8 @@ export default function Chessboard() {
                             }
                             if (whiteRook2NotMoved) {
                                 if (whiteKingNotMoved) {
-                                    newArray[7][7] = null;
-                                    newArray[y][x - 1] = 'wR';
+                                    chessBoard[7][7] = null;
+                                    chessBoard[y][x - 1] = 'wR';
                                     whiteKingNotMoved = false;
                                     whiteRook2NotMoved = false;
                                     break;
@@ -300,13 +301,13 @@ export default function Chessboard() {
                         if (whiteKingNotMoved) {
                             whiteKingNotMoved = false;
                         }
-                        if (newArray[y][x + 1] === 'bK' || newArray[y][x - 1] === 'bK') {
+                        if (chessBoard[y][x + 1] === 'bK' || chessBoard[y][x - 1] === 'bK') {
                             return false;
-                        } else if (newArray[y + 1][x] === 'bK' || newArray[y - 1][x] === 'bK') {
+                        } else if (chessBoard[y + 1][x] === 'bK' || chessBoard[y - 1][x] === 'bK') {
                             return false;
-                        } else if (newArray[y + 1][x + 1] === 'bK' || newArray[y + 1][x - 1] === 'bK') {
+                        } else if (chessBoard[y + 1][x + 1] === 'bK' || chessBoard[y + 1][x - 1] === 'bK') {
                             return false;
-                        } else if (newArray[y - 1][x + 1] === 'bK' || newArray[y - 1][x - 1] === 'bK') {
+                        } else if (chessBoard[y - 1][x + 1] === 'bK' || chessBoard[y - 1][x - 1] === 'bK') {
                             return false;
                         }
                         break;
@@ -320,13 +321,13 @@ export default function Chessboard() {
                         if (y < oldY) {
                             if (x < oldX) {
                                 for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                    if (newArray[oldY - i][(oldX - i)] !== null) {
+                                    if (chessBoard[oldY - i][(oldX - i)] !== null) {
                                         return false;
                                     }
                                 }
                             } else if (x > oldX) {
                                 for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                    if (newArray[oldY - i][(oldX + i)] !== null) {
+                                    if (chessBoard[oldY - i][(oldX + i)] !== null) {
                                         return false;
                                     }
                                 }
@@ -334,13 +335,13 @@ export default function Chessboard() {
                         } else if (y > oldY) {
                             if (x < oldX) {
                                 for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                    if (newArray[oldY + i][oldX - i] !== null) {
+                                    if (chessBoard[oldY + i][oldX - i] !== null) {
                                         return false;
                                     }
                                 }
                             } else if (x > oldX) {
                                 for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                    if (newArray[oldY + i][oldX + i] !== null) {
+                                    if (chessBoard[oldY + i][oldX + i] !== null) {
                                         return false;
                                     }
                                 }
@@ -369,13 +370,13 @@ export default function Chessboard() {
                         if (y < oldY) {
                             if (x < oldX) {
                                 for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                    if (newArray[oldY - i][(oldX - i)] !== null) {
+                                    if (chessBoard[oldY - i][(oldX - i)] !== null) {
                                         return false;
                                     }
                                 }
                             } else if (x > oldX) {
                                 for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                    if (newArray[oldY - i][(oldX + i)] !== null) {
+                                    if (chessBoard[oldY - i][(oldX + i)] !== null) {
                                         return false;
                                     }
                                 }
@@ -383,13 +384,13 @@ export default function Chessboard() {
                         } else if (y > oldY) {
                             if (x < oldX) {
                                 for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                    if (newArray[oldY + i][oldX - i] !== null) {
+                                    if (chessBoard[oldY + i][oldX - i] !== null) {
                                         return false;
                                     }
                                 }
                             } else if (x > oldX) {
                                 for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                    if (newArray[oldY + i][oldX + i] !== null) {
+                                    if (chessBoard[oldY + i][oldX + i] !== null) {
                                         return false;
                                     }
                                 }
@@ -482,8 +483,8 @@ export default function Chessboard() {
                             }
                             if (blackRook1NotMoved) {
                                 if (blackKingNotMoved) {
-                                    newArray[0][0] = null;
-                                    newArray[y][x + 1] = 'bR';
+                                    chessBoard[0][0] = null;
+                                    chessBoard[y][x + 1] = 'bR';
                                     blackKingNotMoved = false;
                                     blackRook1NotMoved = false;
                                     break;
@@ -495,8 +496,8 @@ export default function Chessboard() {
                             }
                             if (blackRook2NotMoved) {
                                 if (blackKingNotMoved) {
-                                    newArray[0][7] = null;
-                                    newArray[y][x - 1] = 'bR';
+                                    chessBoard[0][7] = null;
+                                    chessBoard[y][x - 1] = 'bR';
                                     blackKingNotMoved = false;
                                     blackRook2NotMoved = false;
                                     break;
@@ -515,18 +516,14 @@ export default function Chessboard() {
                         if (blackKingNotMoved) {
                             blackKingNotMoved = false;
                         }
-                        if (newArray[y][x + 1] === 'wK' || newArray[y][x - 1] === 'wK') {
+                        if (chessBoard[y][x + 1] === 'wK' || chessBoard[y][x - 1] === 'wK') {
                             return false;
-                        } else if (y !== 0) {
-                            if (newArray[y + 1][x] === 'wK' || newArray[y - 1][x] === 'wK') {
-                                return false;
-                            }
-                        } else if (newArray[y + 1][x + 1] === 'wK' || newArray[y + 1][x - 1] === 'wK') {
+                        } else if (chessBoard[y + 1][x] === 'wK' || chessBoard[y - 1][x] === 'wK') {
                             return false;
-                        } else if (y !== 0) {
-                            if (newArray[y - 1][x + 1] === 'wK' || newArray[y - 1][x - 1] === 'wK') {
-                                return false;
-                            }
+                        } else if (chessBoard[y + 1][x + 1] === 'wK' || chessBoard[y + 1][x - 1] === 'wK') {
+                            return false;
+                        } else if (chessBoard[y - 1][x + 1] === 'wK' || chessBoard[y - 1][x - 1] === 'wK') {
+                            return false;
                         }
                         break;
                     case 'B':
@@ -539,13 +536,13 @@ export default function Chessboard() {
                         if (y < oldY) {
                             if (x < oldX) {
                                 for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                    if (newArray[oldY - i][(oldX - i)] !== null) {
+                                    if (chessBoard[oldY - i][(oldX - i)] !== null) {
                                         return false;
                                     }
                                 }
                             } else if (x > oldX) {
                                 for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                    if (newArray[oldY - i][(oldX + i)] !== null) {
+                                    if (chessBoard[oldY - i][(oldX + i)] !== null) {
                                         return false;
                                     }
                                 }
@@ -553,13 +550,13 @@ export default function Chessboard() {
                         } else if (y > oldY) {
                             if (x < oldX) {
                                 for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                    if (newArray[oldY + i][oldX - i] !== null) {
+                                    if (chessBoard[oldY + i][oldX - i] !== null) {
                                         return false;
                                     }
                                 }
                             } else if (x > oldX) {
                                 for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                    if (newArray[oldY + i][oldX + i] !== null) {
+                                    if (chessBoard[oldY + i][oldX + i] !== null) {
                                         return false;
                                     }
                                 }
@@ -588,13 +585,13 @@ export default function Chessboard() {
                         if (y < oldY) {
                             if (x < oldX) {
                                 for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                    if (newArray[oldY - i][(oldX - i)] !== null) {
+                                    if (chessBoard[oldY - i][(oldX - i)] !== null) {
                                         return false;
                                     }
                                 }
                             } else if (x > oldX) {
                                 for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                    if (newArray[oldY - i][(oldX + i)] !== null) {
+                                    if (chessBoard[oldY - i][(oldX + i)] !== null) {
                                         return false;
                                     }
                                 }
@@ -602,13 +599,13 @@ export default function Chessboard() {
                         } else if (y > oldY) {
                             if (x < oldX) {
                                 for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                    if (newArray[oldY + i][oldX - i] !== null) {
+                                    if (chessBoard[oldY + i][oldX - i] !== null) {
                                         return false;
                                     }
                                 }
                             } else if (x > oldX) {
                                 for (let i = 1; i < Math.abs(y - oldY); i++) {
-                                    if (newArray[oldY + i][oldX + i] !== null) {
+                                    if (chessBoard[oldY + i][oldX + i] !== null) {
                                         return false;
                                     }
                                 }
