@@ -717,8 +717,6 @@ export default function Chessboard() {
 
     useEffect(() => {
 
-        console.log('asd')
-
         if (!didLoad) {
             code = window.location.pathname.split('/')[2];
             fetch('/api/chessboard?code=' + code).then((response) => response.json()).then(data => {
