@@ -8,7 +8,7 @@ RUMEN is WEB application that allows you to play a game of chess with your frien
 - **API** - Controls users' requests and manages the database
 - **SERVER** - Hosts the said above parts of the projects and manages sessions
 
-<img src='https://github.com/krispetrov/rumen/blob/dev/doc/RUMEN_Homepage.png?raw=true' width=70% height=70%>
+<img src='https://github.com/krispetrov/rumen/blob/master/doc/RUMEN_Homepage.png?raw=true' width=70% height=70%>
 
 The app originated as a Graduation Project for my Diploma and continues to grow every day since then.
 The idea is that it lets you create your own chess room without having to register. After that you can
