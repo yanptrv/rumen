@@ -5,14 +5,12 @@ cd RUMEN/
 
 #INSTALL AND RUN PIPENV
 pip3 install pipenv
-pipenv shell
-pipenv sync
+pipenv install --system --deploy
+
+#CONFIGURE THE DATA BASE
+python3 manage.py migrate
 
 #INSTALL REACT'S PACKAGES AND BUILD THE GUI
 cd frontend
 npm i
 npm run build
-
-#CONFIGURE THE DATA BASE
-cd ..
-python3 manage.py migrate
