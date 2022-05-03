@@ -56,16 +56,8 @@ There are two ways of running the application:
 
      ```
      git clone https://github.com/krispetrov/rumen.git
-     cd rumen/RUMEN/
-     pip3 install pipenv
-     pipenv shell
-     pipenv sync
-     cd frontend
-     npm i
-     npm run build
-     cd ..
-     python3 manage.py migrate
-     python3 manage.py runserver "0.0.0.0:8080"
+     bash ./rumen/install
+     python3 manage.py runserver "<ipAddress>:8080"
      ```
 
 ## Opening RUMEN
