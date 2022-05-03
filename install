@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #GO INTO DJANGO DIRECTORY
-cd RUMEN/
+cd ./RUMEN/
 
 #INSTALL AND RUN PIPENV
 pip3 install pipenv
@@ -11,6 +11,6 @@ pipenv install --system --deploy
 python3 manage.py migrate
 
 #INSTALL REACT'S PACKAGES AND BUILD THE GUI
-cd frontend
+cd ./frontend/
 npm i
 npm run build
