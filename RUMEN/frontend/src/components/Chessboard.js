@@ -4,8 +4,8 @@ import {CopyToClipboard} from "react-copy-to-clipboard/src";
 import {Button, Col, Container, Row} from "react-bootstrap";
 import Footer from "./Footer";
 import {ToastContainer, toast} from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
 import {useNavigate} from 'react-router-dom';
+import {Howl, Howler} from 'howler';
 
 let flagForMove = false;
 let code = '';
@@ -23,10 +23,15 @@ let whiteRook1NotMoved = true;
 let whiteRook2NotMoved = true;
 let whiteKingMustMove = false;
 let blackKingMustMove = false;
+let myColor = '';
 
 export default function Chessboard() {
 
+    const {Howl, Howler} = require('howler');
     let navigate = useNavigate();
+    let sound = new Howl({
+        src: ['https://codeskulptor-demos.commondatastorage.googleapis.com/pang/pop.mp3']
+    });
 
     const requestSocket = new WebSocket(`ws://${window.location.host}/ws/socket-server/`)
     requestSocket.onmessage = (e) => {
@@ -97,14 +102,19 @@ export default function Chessboard() {
             blackOrWhite = 'black'
         } else {
             blackOrWhite = 'white'
+
         }
 
         if (flag) {
 
             //removing the piece and saving its coordinates
-
             if (chessBoard[y][x] != null) {
                 piece = chessBoard[y][x];
+                if (piece.charAt(0) === 'w' && secondPlayer===true) {
+                    return false;
+                } else if (piece.charAt(0) === 'b' && secondPlayer!==true) {
+                    return false;
+                }
                 chessBoard[y][x] = null;
                 oldX = x;
                 oldY = y;
@@ -112,6 +122,7 @@ export default function Chessboard() {
             }
         } else {
 
+            sound.play();
             //checking if the move is legal, if not returning it to its original place
 
             if (rulesOfChess(y, x, chessBoard)) {
@@ -692,7 +703,6 @@ export default function Chessboard() {
     // restarting the game to the starting layout
 
     const restartGame = () => {
-
         if (!secondPlayer) {
             const sendPOST = {
                 method: 'PUT',
@@ -720,10 +730,20 @@ export default function Chessboard() {
         if (!didLoad) {
             code = window.location.pathname.split('/')[2];
             fetch('/api/chessboard?code=' + code).then((response) => response.json()).then(data => {
-                FENtoBoard(data['board']);
                 flagForMove = data['personToMove'] === 'white';
-                setDidLoad(true);
                 secondPlayer = data['secondPlayer'];
+                if (flagForMove) {
+                    blackOrWhite = 'black'
+                } else {
+                    blackOrWhite = 'white'
+                }
+                if (secondPlayer) {
+                    myColor = 'black';
+                } else {
+                    myColor = 'white';
+                }
+                FENtoBoard(data['board']);
+                setDidLoad(true);
             });
         }
 
@@ -731,46 +751,56 @@ export default function Chessboard() {
 
     return (
         <>
-            <Container fluid>
-                <Row>
-                    <Col>
-                        <AiOutlineRollback className={'goBack text-dark'} onClick={goHome}/>
-                    </Col>
-                </Row>
-                <Row className={'text-center mt-4'}>
-                    <Col>
-                        <CopyToClipboard text={code}>
-                            <Button size={'lg'} variant={'dark'} onClick={notify}>Copy Code</Button>
-                        </CopyToClipboard>
-                    </Col>
-                    <Col>
-                        <Button size={'lg'} variant={'warning'} onClick={restartGame}>Restart</Button>
-                    </Col>
-                </Row>
-            </Container>
-            <div id='chessboard'>
+                <Container fluid>
+                    <Row>
+                        <Col>
+                            <AiOutlineRollback className={'goBack text-dark'} onClick={goHome}/>
+                        </Col>
+                    </Row>
+                    <Row className={'text-center mt-4'}>
+                        <Col>
+                            <CopyToClipboard text={code}>
+                                <Button size={'lg'} variant={'dark'} onClick={notify}>Copy Code</Button>
+                            </CopyToClipboard>
+                        </Col>
 
-                {[...Array(8).keys()].map((y) => [...Array(8).keys()].map((x) => {
-                    let color = 'black';
-                    if ((x + y) % 2 === 0) {
-                        color = 'white'
-                    }
-                    if (board[y][x] != null) {
-                        return (
-                            <div onClick={() => redirect(y, x)} id={y + '' + x} className={color + ' tile'}>
-                                <img src={'../../static/images/chessPieces/' + board[y][x] + '.svg'}
-                                     alt='chess piece'/>
-                            </div>
-                        );
-                    } else {
-                        return (
-                            <div onClick={() => redirect(y, x)} id={y + '' + x} className={color + ' tile'}/>
-                        );
-                    }
-                }))}
-            </div>
+                        <Col>
+                            <h2 className={'text-light'}>Move something {blackOrWhite}</h2>
+                        </Col>
+
+                        <Col>
+                            <Button disabled={secondPlayer === true} size={'lg'} variant={'warning'}
+                                    onClick={restartGame}>Restart</Button>
+                        </Col>
+
+
+                    </Row>
+                </Container>
+
+                <div id='chessboard'>
+
+                    {[...Array(8).keys()].map((y) => [...Array(8).keys()].map((x) => {
+                        let color = 'black';
+                        if ((x + y) % 2 === 0) {
+                            color = 'white'
+                        }
+                        if (board[y][x] != null) {
+                            return (
+                                <div onClick={() => redirect(y, x)} id={y + '' + x} className={color + ' tile'}>
+                                    <img src={'../../static/images/chessPieces/' + board[y][x] + '.svg'}
+                                         alt='chess piece'/>
+                                </div>
+                            );
+                        } else {
+                            return (
+                                <div onClick={() => redirect(y, x)} id={y + '' + x} className={color + ' tile'}/>
+                            );
+                        }
+                    }))}
+                </div>
             <Footer/>
             <ToastContainer/>
+
         </>
     );
 };
